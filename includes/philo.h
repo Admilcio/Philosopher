@@ -53,25 +53,28 @@ typedef struct s_table
 }	t_table;
 
 bool			ft_isdigit(int c);
+bool			is_valid_args(int ac, char **av);
 int				ft_atoi(const char *num);
 void			ft_eating(t_philo *philo);
 void			ft_thinking(t_philo *philo);
 void			ft_sleeping(t_philo *philo);
 void			ft_stop_dinner(t_table *table);
-bool			ft_check_stop_habits(t_philo *philo);
+bool			ft_stop_routine_check(t_philo *philo);
 void			ft_create_forks(t_table *table);
-void			ft_check_forks(t_philo *philo);
+void			ft_take_forks(t_philo *philo);
 void			ft_create_philo(t_table *table);
-void			*ft_routine(void *philosopher);
+void			*ft_run_routine(void *philosopher);
 void			ft_exit(t_table *table);
-void			ft_death_eaten(t_table *table, int id);
-void			ft_print_log(t_philo *philo, char *message, unsigned long time);
-unsigned long	ft_gettimeofday_ms(void);
-unsigned long	ft_get_time_think(t_table *table);
+void			ft_philo_died(t_table *table, int id);
+void			ft_log_status(t_philo *philo, char *message, unsigned long time);
+unsigned long	ft_get_time_ms(void);
+unsigned long	ft_get_think_time(t_table *table);
 void			ft_wait_until_time(unsigned long delay_ms, t_philo *philo);
 bool			ft_init_forks(t_fork *fork, int id);
 void			ft_init_table(t_table *table, char **av);
 bool			ft_init_philo(t_philo *philo, t_table *table, int id);
 long			ft_ato_long(const char *str);
+int				ft_error(const char *msg);
+void			ft_synch_all_philo(t_philo *philo);
 
 #endif
