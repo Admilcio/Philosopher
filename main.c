@@ -21,7 +21,7 @@ static void	ft_wait_threads(t_table *table)
 		pthread_join(table->philo[i++].philo_thread, NULL);
 }
 
-static void	ft_amount_to_eat(t_table *table, unsigned int i, unsigned int *n)
+static void	ft_required_meal(t_table *table, unsigned int i, unsigned int *n)
 {
 	if (table->philo[i].required_meals == 0)
 		*n += 1;
@@ -43,12 +43,12 @@ static void	ft_has_died(t_table *table)
 		{
 			usleep(1000);
 			pthread_mutex_lock(&table->philo[i].philo_lock);
-			ft_amount_to_eat(table, i, &j);
+			ft_required_meal(table, i, &j);
 			if ((table->philo[i].required_meals == -1
-					|| table->philo[i].required_meals > 0) && (ft_gettimeofday_ms()
+					|| table->philo[i].required_meals > 0) && (ft_get_time_ms()
 					- table->philo[i].t_last_meal > table->t_to_die))
 			{
-				ft_death_eaten(table, i);
+				ft_philo_died(table, i);
 				return ;
 			}
 			pthread_mutex_unlock(&table->philo[i].philo_lock);
@@ -57,77 +57,34 @@ static void	ft_has_died(t_table *table)
 	}
 }
 
-static bool	is_only_digit(char *str)
+bool	ft_initialize_simulation(t_table *table, char **av)
 {
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (ft_isdigit(str[i]) == false)
-			return (false);
-		i++;
-	}
-	return (true);
+	ft_init_table(table, av);
+	if (table->fork)
+		ft_create_forks(table);
+	if (table->philo && table->fork)
+		ft_create_philo(table);
+	return (table->philo != NULL && table->fork != NULL);
 }
 
-static bool	is_valid_input(int argc, char **argv)
+void	ft_check_simulation(t_table *table)
 {
-	int		i;
-	long	value;
-
-	value = 0;
-	i = 1;
-	while (i < argc)
-	{
-		if (is_only_digit(argv[i]) == false)
-		{
-			printf("Invalid input in [%s]. Only digit accepted.\n", argv[i]);
-			return (false);
-		}
-		value = ft_ato_long(argv[i]);
-		if (value < 0 || value > LONG_MAX)
-		{
-			printf("Invalid input in [%ld]. Negative or so long.\n", value);
-			return (false);
-		}
-		i++;
-	}
-	return (true);
+	if (table->philo)
+		ft_has_died(table);
+	if (table->philo)
+		ft_wait_threads(table);
 }
 
-static bool	is_valid_args(int ac, char **av, t_table *table)
-{
-	if (ac < 5 || ac > 6)
-		return (false);
-	if (table->n_philo > 200)
-	{
-		printf("Invalid input in [%i].\n", table->n_philo);
-		return (false);
-	}
-	if (is_valid_input(ac, av) == false)
-		return(false);
-	if (ft_atoi(av[1]) > 200)
-		return (false);
-	return (true);
-}
 
 int	main(int ac, char **av)
 {
 	static t_table	table;
 
-	if (is_valid_args(ac, av, &table) == true)
-	{
-		ft_init_table(&table, av);
-		if (table.fork)
-			ft_create_forks(&table);
-		if (table.philo && table.fork)
-			ft_create_philo(&table);
-		if (table.philo)
-			ft_has_died(&table);
-		if (table.philo)
-			ft_wait_threads(&table);
-	}
+	if (!is_valid_args(ac, av))
+		return (ft_error("Invalid arguments"));
+	if (!ft_initialize_simulation(&table, av))
+		return (ft_error("Failed to initialize simulation"));
+	ft_check_simulation(&table);
 	ft_exit(&table);
 	return (0);
 }
