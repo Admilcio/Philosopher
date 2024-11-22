@@ -33,7 +33,7 @@ bool	ft_init_philo(t_philo *philo, t_table *table, int id)
 	philo->table = table;
 	if (pthread_mutex_init(&philo->philo_lock, NULL) != 0)
 		return (false);
-	if (pthread_create(&philo->philo_thread, NULL, ft_routine,
+	if (pthread_create(&philo->philo_thread, NULL, ft_run_routine,
 			philo) != 0)
 		return (false);
 	return (true);
@@ -45,7 +45,7 @@ void	ft_init_table(t_table *table, char **av)
 	table->t_to_die = ft_atoi(av[2]);
 	table->t_to_eat = ft_atoi(av[3]);
 	table->t_to_sleep = ft_atoi(av[4]);
-	table->t_to_think = ft_get_time_think(table);
+	table->t_to_think = ft_get_think_time(table);
 	table->required_meals = -1;
 	table->is_dead = false;
 	table->is_fed = false;
@@ -55,24 +55,24 @@ void	ft_init_table(t_table *table, char **av)
 	if (pthread_mutex_init(&table->access_mutex, NULL) != 0
 		|| pthread_mutex_init(&table->log_mutex, NULL) != 0)
 	{
-		ft_exit(table);
+		ft_clear_all(table);
 		return ;
 	}
 	table->philo = (t_philo *)malloc(sizeof(t_philo) * table->n_philo);
 	if (!table->philo)
-		ft_exit(table);
+		ft_clear_all(table);
 	table->fork = (t_fork *)malloc(sizeof(t_fork) * table->n_philo);
 	if (!table->fork)
-		ft_exit(table);
-	table->t_start = ft_gettimeofday_ms();
+		ft_clear_all(table);
+	table->t_start = ft_get_time_ms();
 }
 
 bool	ft_init_forks(t_fork *fork, int id)
 {
 	fork->id = id;
-	fork->exist = false;
+	fork->found = false;
 	if (pthread_mutex_init(&fork->fork, NULL) != 0)
 		return (false);
-	fork->exist = true;
+	fork->found = true;
 	return (true);
 }
