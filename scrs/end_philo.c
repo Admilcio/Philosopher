@@ -12,7 +12,8 @@
 
 #include "../includes/philo.h"
 
-static void	ft_check_required_meal(t_table *table, unsigned int i, unsigned int *n)
+static void	ft_check_required_meal(t_table *table, unsigned int i,
+        unsigned int *n)
 {
 	if (table->philo[i].required_meals == 0)
 		*n += 1;
