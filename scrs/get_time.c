@@ -16,8 +16,8 @@ unsigned long	ft_get_think_time(t_table *table)
 {
 	unsigned long	t_to_think;
 
-	/* if (table->n_philo != 1)
-		t_to_think = table->t_to_eat * 2 - table->t_to_sleep; */
+	if (table->n_philo != 1)
+		t_to_think = table->t_to_eat * 2 - table->t_to_sleep;
 	if (table->t_to_eat > table->t_to_sleep)
 		t_to_think = table->t_to_eat - table->t_to_sleep;
 	else

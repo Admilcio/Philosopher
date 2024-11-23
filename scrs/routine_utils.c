@@ -26,7 +26,7 @@ bool	ft_stop_routine_check(t_philo *philo)
 
 void	ft_take_forks(t_philo *philo)
 {
-	if (philo->id % 2 == 1 && philo->left_fork != NULL) // Philo = 1 checked 
+	if (philo->id % 2 == 1 && philo->left_fork != NULL)
 		pthread_mutex_lock(&philo->left_fork->fork);
 	else if (philo->right_fork != NULL)
 		pthread_mutex_lock(&philo->right_fork->fork);

@@ -20,7 +20,6 @@ bool	ft_isdigit(int c)
 	return (result);
 }
 
-
 static bool	is_only_digit(char *str)
 {
 	int	i;
@@ -59,7 +58,7 @@ bool	is_valid_args(int ac, char **av)
 	if (ac < 5 || ac > 6)
 		return (false);
 	if (is_valid_input(ac, av) == false)
-		return(false);
+		return (false);
 	if (ft_atoi(av[1]) > 200)
 		return (false);
 	return (true);

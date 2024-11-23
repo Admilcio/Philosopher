@@ -67,4 +67,3 @@ int	ft_atoi(const char *num)
 		res = res * 10 + ((int)num[i++] - 48);
 	return (res * signal);
 }
-
